@@ -48,6 +48,7 @@ class AbstractMethod implements InterfaceMethod {
      */
     public function getSignature()
     {
+
         uksort($this->parameters, function($aKey, $bKey){
                 return strcmp($aKey, $bKey);
             });
@@ -59,6 +60,7 @@ class AbstractMethod implements InterfaceMethod {
         }
 
         return md5($signature);
+
     }
 
     /**

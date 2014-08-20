@@ -27,12 +27,20 @@ class Upload extends AbstractMethod {
      */
     protected $document;
 
+    public function __construct($apiKey, $secret) {
+        parent::__construct($apiKey, $secret);
+
+        $this->parameters['apiKey'] = $this->apiKey;
+        $this->parameters['action'] = "issuu.document.upload";
+    }
+
     /**
      * @param Document $document
      */
     public function setDocument(Document $document)
     {
         $this->document = $document;
+        $this->parameters = $this->document->getParameters();
     }
 
     /**
@@ -40,11 +48,6 @@ class Upload extends AbstractMethod {
      */
     public function exec()
     {
-        $this->parameters = $this->document->getParameters();
-
-        $this->parameters['apiKey'] = $this->apiKey;
-        $this->parameters['action'] = "issuu.document.upload";
-
         $signature = $this->getSignature();
 
         $this->request($this->document, $signature, $this->apiKey);
