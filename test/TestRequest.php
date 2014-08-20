@@ -21,5 +21,17 @@ class TestRequest extends PHPUnit_Framework_TestCase {
         $request = new \Issuu\IssuuRequest($apiKey, $signature, $action, $parameters, $method);
         $this->assertEquals($request->getMethod(), 'post');
     }
+
+    public function testSignatureIsValid() {
+        $apiKey = 'apikey';
+        $signature = 'signature';
+        $parameters = array();
+        $action = 'issuu.document.upload';
+        $method = 'bla';
+        $request = new \Issuu\IssuuRequest($apiKey, $signature, $action, $parameters, $method);
+
+        $signature = $request->getSignature();
+
+    }
 }
  

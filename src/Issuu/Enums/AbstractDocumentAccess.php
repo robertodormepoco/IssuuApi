@@ -7,8 +7,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Issuu\IssuuEnums;
+namespace Issuu\Enums;
 
+/**
+ * Class AbstractDocumentAccess
+ * @package Issuu\Enums
+ */
 abstract class AbstractDocumentAccess {
     const PUBLIC_ACCESS = 'public';
     const PRIVATE_ACCESS = 'private';

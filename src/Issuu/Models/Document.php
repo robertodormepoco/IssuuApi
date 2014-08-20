@@ -1,20 +1,17 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Roberto Lombi
- * Date: 13/11/13
- * Time: 15.07
+ *
  */
 
-namespace Issuu;
+namespace Issuu\Models;
 
-use Issuu\IssuuEnums\DocumentAccess;
-use Issuu\IssuuEnums\DocumentCategory;
-use Issuu\IssuuEnums\DocumentType;
-use Issuu\IssuuEnums\LanguageCode;
-use Issuu\IssuuEnums\ResponseFormat;
+use Issuu\IssuuEnums\AbstractDocumentAccess;
 
-class IssuuDocument {
+/**
+ * Class Document
+ * @package Issuu\Models
+ */
+class Document {
 
     /**
      * Path to file
@@ -76,16 +73,13 @@ class IssuuDocument {
     /**
      * Language codes, more at http://developers.issuu.com/api/languagecodes.html
      *
-     * @var LanguageCode
      */
     protected $language;
 
     /**
      * Is document of public domain?
      *
-     * DocumentAccess::PUBLIC_ACCESS | DocumentAccess::PRIVATE_ACCESS
-     *
-     * @var DocumentAccess
+     * @var AbstractDocumentAccess
      */
     protected $access;
 
@@ -99,14 +93,12 @@ class IssuuDocument {
     /**
      * Document category, more at http://developers.issuu.com/api/documentcategories.html
      *
-     * @var DocumentCategory
      */
     protected $category;
 
     /**
      * Document type, more at http://developers.issuu.com/api/documenttypes.html
      *
-     * @var DocumentType
      */
     protected $type;
 
@@ -145,7 +137,6 @@ class IssuuDocument {
      * Format of the response
      * Must be "xml" or "json", default "xml"
      *
-     * @var ResponseFormat
      */
     protected $format;
 
@@ -157,7 +148,7 @@ class IssuuDocument {
     protected $jsonCallback;
 
     /**
-     * @param \Issuu\IssuuEnums\DocumentAccess $access
+     * @param \Issuu\IssuuEnums\AbstractDocumentAccess $access
      */
     public function setAccess($access)
     {
@@ -165,7 +156,7 @@ class IssuuDocument {
     }
 
     /**
-     * @return \Issuu\IssuuEnums\DocumentAccess
+     * @return \Issuu\IssuuEnums\AbstractDocumentAccess
      */
     public function getAccess()
     {
@@ -173,7 +164,6 @@ class IssuuDocument {
     }
 
     /**
-     * @param \Issuu\IssuuEnums\DocumentCategory $category
      */
     public function setCategory($category)
     {
@@ -181,7 +171,6 @@ class IssuuDocument {
     }
 
     /**
-     * @return \Issuu\IssuuEnums\DocumentCategory
      */
     public function getCategory()
     {
@@ -285,7 +274,6 @@ class IssuuDocument {
     }
 
     /**
-     * @param \Issuu\IssuuEnums\ResponseFormat $format
      */
     public function setFormat($format)
     {
@@ -293,7 +281,6 @@ class IssuuDocument {
     }
 
     /**
-     * @return \Issuu\IssuuEnums\ResponseFormat
      */
     public function getFormat()
     {
@@ -333,7 +320,6 @@ class IssuuDocument {
     }
 
     /**
-     * @param \Issuu\IssuuEnums\LanguageCode $language
      */
     public function setLanguage($language)
     {
@@ -341,7 +327,6 @@ class IssuuDocument {
     }
 
     /**
-     * @return \Issuu\IssuuEnums\LanguageCode
      */
     public function getLanguage()
     {
@@ -445,7 +430,6 @@ class IssuuDocument {
     }
 
     /**
-     * @param \Issuu\IssuuEnums\DocumentType $type
      */
     public function setType($type)
     {
@@ -453,7 +437,6 @@ class IssuuDocument {
     }
 
     /**
-     * @return \Issuu\IssuuEnums\DocumentType
      */
     public function getType()
     {
@@ -464,7 +447,7 @@ class IssuuDocument {
 
         $parameters = array();
 
-        $reflector = new \ReflectionClass('\Issuu\IssuuDocument');
+        $reflector = new \ReflectionClass('Issuu\Models\Document');
 
         $vars = $reflector->getProperties();
 
