@@ -9,12 +9,7 @@
  * Website: http://www.robertodormepoco.org
  */
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-include_once __DIR__ . '/../vendor/autoload.php';
-
-class TestIssuuDocumentMethod extends PHPUnit_Framework_TestCase {
+class IssuuDocumentMethodTest extends PHPUnit_Framework_TestCase {
 
     public function testSignatureWithNoParametersIsValid() {
 
