@@ -1,5 +1,5 @@
+.gitignore
 vendor
 composer.lock
 .idea
 test.pdf
-bin
