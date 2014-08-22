@@ -2,8 +2,8 @@
 /**
  * 
  * Author: Roberto Lombi
- * Date: 20/08/14
- * Time: 17:48
+ * Date: 21/08/14
+ * Time: 16:13
  *
  * Email: signoramiailmio@robertodormepoco.org
  * Website: http://www.robertodormepoco.org
@@ -11,26 +11,19 @@
 
 namespace Issuu\Document;
 
+
 use Issuu\Exceptions\UploadException;
 use Issuu\Models\Document;
 use Issuu \Document\MethodAbstract;
 
 /**
- * Class Upload
+ * Class UrlUpload
  * @package Issuu\Document
- *
- * {@inheritdoc}
  */
-class Upload extends MethodAbstract {
+class UrlUpload extends MethodAbstract {
 
-    /**
-     * @var Document
-     */
     protected $document;
 
-    /**
-     * @var array
-     */
     protected $parameters;
 
     /**
@@ -40,28 +33,29 @@ class Upload extends MethodAbstract {
     public function __construct($apiKey, $secret) {
         parent::__construct($apiKey, $secret);
 
-        $this->parameters["action"] = "issuu.document.upload";
+        $this->parameters['action'] = 'issuu.document.url_upload';
+
     }
 
     /**
      * @param Document $document
      */
-    public function setDocument(Document $document)
-    {
+    public function setDocument(Document $document) {
         $this->document = $document;
-
         $this->parameters = array_merge($this->parameters, $this->document->getParameters());
     }
 
     /**
-     * @param $filePath
+     * @param $slurpUrl
      */
-    public function setFile($filePath) {
-        $this->parameters['file'] = '@' . $filePath;
+    public function setSlurpUrl($slurpUrl) {
+        $this->parameters['slurpUrl'] = $slurpUrl;
     }
 
     /**
-     * Execute the upload method
+     * Executes the url upload
+     *
+     * @return mixed
      */
     public function exec()
     {
@@ -71,28 +65,27 @@ class Upload extends MethodAbstract {
     }
 
     /**
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
      * @param $signature
      * @return \SimpleXMLElement
      */
-    private function request($signature)
-    {
+    private function request($signature) {
         $curl = curl_init();
 
         $post = array_merge($this->parameters, array("signature" => $signature));
 
+        $fields = array();
+
+        foreach($post as $key => $value) {
+            $fields[] = $key . '=' . $value;
+        }
+
+        $result = implode('&', $fields);
+
         curl_setopt_array($curl, array(
-                CURLOPT_URL => MethodAbstract::ENDPOINT,
+                CURLOPT_URL => 'http://api.issuu.com/1_0',
                 CURLOPT_USERAGENT => 'MusicClub Issuu client',
                 CURLOPT_POST => 'true',
-                CURLOPT_POSTFIELDS => $post,
+                CURLOPT_POSTFIELDS => $result,
                 CURLOPT_BUFFERSIZE => 128,
                 CURLOPT_RETURNTRANSFER => 1,
             ));
@@ -111,6 +104,4 @@ class Upload extends MethodAbstract {
 
         return $xmlResponse;
     }
-
-
-} 
+}

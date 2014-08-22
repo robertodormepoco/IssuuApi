@@ -15,7 +15,7 @@ namespace Issuu\Document;
  * Interface MethodInterface
  * @package Issuu\Document
  */
-interface InterfaceMethod {
+interface MethodInterface {
 
     /**
      * Instantiate a method with the api key and the secret
@@ -32,4 +32,10 @@ interface InterfaceMethod {
      */
     public function getSignature();
 
+    /**
+     * Executes the method
+     *
+     * @return mixed
+     */
+    public function exec();
 } 

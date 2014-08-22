@@ -14,13 +14,6 @@ use Issuu\IssuuEnums\AbstractDocumentAccess;
 class Document {
 
     /**
-     * Path to file
-     *
-     * @var string
-     */
-    protected $filePath;
-
-    /**
      *  Value determining the URL address of the publication http://issuu.com/<username>/docs/<name>
      *  The name must be 3-50 characters long. Use lowercase letters (a-z), numbers (0-9) and characters (_.-)
      *  No spaces allowed
@@ -242,22 +235,6 @@ class Document {
     }
 
     /**
-     * @param string $filePath
-     */
-    public function setFilePath($filePath)
-    {
-        $this->filePath = $filePath;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFilePath()
-    {
-        return $this->filePath;
-    }
-
-    /**
      * @param array $folderIds
      */
     public function setFolderIds($folderIds)
@@ -452,11 +429,9 @@ class Document {
         $vars = $reflector->getProperties();
 
         foreach($vars as $var){
-            if($var->getName() != 'filePath') {
-                $var->setAccessible(true);
-                if($var->getValue($this) != null) $parameters[$var->getName()] = $var->getValue($this);
-                $var->setAccessible(false);
-            }
+            $var->setAccessible(true);
+            if($var->getValue($this) != null) $parameters[$var->getName()] = $var->getValue($this);
+            $var->setAccessible(false);
         }
 
         return $parameters;

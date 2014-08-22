@@ -12,12 +12,13 @@
 namespace Issuu\Document;
 
 use Issuu\Models\Document;
+use Issuu \Document\MethodAbstract;
 
 /**
  * Class DocumentsList
  * @package Issuu\Document
  */
-class DocumentsList extends AbstractMethod {
+class DocumentsList extends MethodAbstract {
 
     protected $documents;
 

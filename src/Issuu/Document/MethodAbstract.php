@@ -11,6 +11,7 @@
 
 namespace Issuu \Document;
 
+use Issuu\Document\MethodInterface;
 use Issuu\Exceptions\UploadException;
 
 /**
@@ -19,7 +20,9 @@ use Issuu\Exceptions\UploadException;
  *
  * {@inheritdoc}
  */
-class AbstractMethod implements InterfaceMethod {
+abstract class MethodAbstract implements MethodInterface {
+
+    const ENDPOINT = 'http://upload.issuu.com/1_0';
 
     protected $secret;
 
@@ -37,7 +40,7 @@ class AbstractMethod implements InterfaceMethod {
     {
         $this->secret = $secret;
         $this->apiKey = $apiKey;
-        $this->parameters = array();
+        $this->parameters = array("apiKey" => $apiKey);
     }
 
 
@@ -48,7 +51,6 @@ class AbstractMethod implements InterfaceMethod {
      */
     public function getSignature()
     {
-
         uksort($this->parameters, function($aKey, $bKey){
                 return strcmp($aKey, $bKey);
             });
@@ -56,11 +58,12 @@ class AbstractMethod implements InterfaceMethod {
         $signature = $this->secret;
 
         foreach($this->parameters as $key => $value){
-            $signature .= $key . $value;
+            if($key != 'file') $signature .= $key . $value;
         }
 
-        return md5($signature);
+        echo $signature . PHP_EOL;
 
+        return md5($signature);
     }
 
     /**
@@ -71,9 +74,10 @@ class AbstractMethod implements InterfaceMethod {
     {
         foreach($responseXML->attributes() as $attribute)
             /** @var \SimpleXMLElement $attribute */
-            if($attribute->getName() == 'stat')
-                if($attribute != 'ok') {
+            if($attribute->getName() == 'stat') {
+                if($attribute == 'fail') {
                     throw new UploadException($responseXML->error['code'], $responseXML->error['message'], $responseXML->error['field']);
                 }
+            }
     }
 }

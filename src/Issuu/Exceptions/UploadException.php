@@ -24,9 +24,18 @@ class UploadException extends AbstractException {
      * @param int $message
      * @param \Exception $field
      */
-    public function __construct($code, $message, $field) {
-        /**
-         * @TODO: check code and print relative message and stuff
-         */
+    public function __construct($code, $message, $fields) {
+        $result = '';
+
+        if(is_array($fields)) {
+            foreach($fields as $field) {
+                $result .= " " . $field;
+            }
+        } else {
+            $result = $fields;
+        }
+
+        parent::__construct($message . " (" . $result . ")");
     }
+
 } 

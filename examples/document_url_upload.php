@@ -1,6 +1,7 @@
 <?php
+
 /**
- * 
+ *
  * Author: Roberto Lombi
  * Date: 20/08/14
  * Time: 19:11
@@ -11,18 +12,17 @@
 
 include_once __DIR__ . '/../vendor/autoload.php';
 
-$apiKey = "your api key";
-$secret = "your secret";
+$apiKey = "";
+$secret = "";
 
 $doc = new \Issuu\Models\Document();
 
-$uploader = new \Issuu\Document\Upload($apiKey, $secret);
+$uploader = new \Issuu\Document\UrlUpload($apiKey, $secret);
 
-$doc->setTitle('Test doc');
-$doc->setDescription('Lorem ipsum');
-$doc->setAccess(\Issuu\Enums\AbstractDocumentAccess::PRIVATE_ACCESS);
+$doc->setTitle('Test title');
+$doc->setDescription('Test description');
 
-$doc->setFilePath('absolute path to your test file');
+$uploader->setSlurpUrl('http://www.education.gov.yk.ca/pdf/pdf-test.pdf');
 
 $uploader->setDocument($doc);
 

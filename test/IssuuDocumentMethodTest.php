@@ -8,22 +8,34 @@
  * Email: signoramiailmio@robertodormepoco.org
  * Website: http://www.robertodormepoco.org
  */
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 class IssuuDocumentMethodTest extends PHPUnit_Framework_TestCase {
 
     public function testSignatureWithNoParametersIsValid() {
 
-        $apiKey = 'apikey';
+        $apiKey = 'apiKey';
         $secret = 'ohshitthisissosecretimnotgoingtotellanyone';
 
-        $stub = $this->getMockForAbstractClass('\Issuu\Document\AbstractMethod', array($apiKey, $secret));
+        $stub = $this->getMockForAbstractClass('\Issuu\Document\MethodAbstract', array($apiKey, $secret));
 
-        $this->assertEquals('4b30a53485b72b37008409a5a3d970c9', $stub->getSignature());
+        /**
+         * {secret} => ohshitthisissosecretimnotgoingtotellanyone
+         * {apiKey} => apiKey
+         *
+         * md5({secret}apiKey{apiKey})
+         *
+         * md5(ohshitthisissosecretimnotgoingtotellanyoneapiKeyapiKey) = 9e0056792e7e3348a3c252c5e3a1f623
+         *
+         */
+
+        $this->assertEquals('9e0056792e7e3348a3c252c5e3a1f623', $stub->getSignature());
 
     }
 
     public function testSignatureWithParametersIsValid() {
-        $apiKey = 'apikey';
+        $apiKey = 'apiKey';
         $secret = 'ohshitthisissosecretimnotgoingtotellanyone';
 
         $uploader = new \Issuu\Document\Upload($apiKey, $secret);
@@ -34,7 +46,62 @@ class IssuuDocumentMethodTest extends PHPUnit_Framework_TestCase {
 
         $uploader->setDocument($doc);
 
-        $this->assertEquals('4962b858b1ce29f1876e4ba5e2af76c9', $uploader->getSignature());
+        /**
+         * {secret} => ohshitthisissosecretimnotgoingtotellanyone
+         * {action} => issuu.document.upload
+         * {apiKey} => apiKey
+         * {description} => description
+         * {title} => title
+         *
+         * md5({secret}action{action}apiKey{apiKey}description{description}title{title})
+         *
+         * md5(ohshitthisissosecretimnotgoingtotellanyoneactionissuu.document.uploadapiKeyapiKeydescriptiondescription
+         * titletitle) = 14b3ec8134abe250dcd672843cbadc83
+         *
+         */
+
+        $this->assertEquals('14b3ec8134abe250dcd672843cbadc83', $uploader->getSignature());
+    }
+
+    public function testUploadMethodParameters() {
+        $apiKey = 'apiKey';
+        $secret = 'ohshitthisissosecretimnotgoingtotellanyone';
+
+        $uploader = new \Issuu\Document\Upload($apiKey, $secret);
+
+        $doc = new \Issuu\Models\Document();
+        $doc->setTitle('title');
+        $doc->setDescription('description');
+
+        $uploader->setDocument($doc);
+
+        $uploader->setFile('test.pdf');
+
+        $this->assertEquals($uploader->getParameters(), array(
+                'apiKey' => 'apiKey',
+                'title' => 'title',
+                'action' => 'issuu.document.upload',
+                'description' => 'description',
+                'file' => '@test.pdf'
+            ));
+    }
+
+    public function testDocumentUrlUploadSignatureIsValid() {
+        $apiKey = 'apiKey';
+        $secret = 'ohshitthisissosecretimnotgoingtotellanyone';
+
+        $slurpUrl = 'http://localhost:8000/test.pdf';
+
+        $urlUploader = new \Issuu\Document\UrlUpload($apiKey, $secret);
+        $urlUploader->setSlurpUrl($slurpUrl);
+
+        $doc = new \Issuu\Models\Document();
+        $doc->setTitle('title');
+        $doc->setDescription('description');
+
+        $urlUploader->setDocument($doc);
+
+        $this->assertEquals('604ce0d7f48b039cad0aeeafc4386490', $urlUploader->getSignature());
     }
 }
  
