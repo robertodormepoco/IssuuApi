@@ -12,8 +12,8 @@
 
 include_once __DIR__ . '/../vendor/autoload.php';
 
-$apiKey = "";
-$secret = "";
+$apiKey = "your api key";
+$secret = "your secret";
 
 $doc = new \Issuu\Models\Document();
 

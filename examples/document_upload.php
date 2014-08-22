@@ -23,7 +23,7 @@ $doc->setTitle('Test doc');
 $doc->setDescription('Lorem ipsum');
 $doc->setAccess(\Issuu\Enums\AbstractDocumentAccess::PRIVATE_ACCESS);
 
-$doc->setFilePath('absolute path to your test file');
+$uploader->setFile('absolute path to your test file');
 
 $uploader->setDocument($doc);
 
