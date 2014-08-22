@@ -3,3 +3,4 @@ vendor
 composer.lock
 .idea
 test.pdf
+parameters.yml

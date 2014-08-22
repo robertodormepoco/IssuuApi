@@ -3,8 +3,8 @@
 /**
  *
  * Author: Roberto Lombi
- * Date: 20/08/14
- * Time: 19:11
+ * Date: 22/08/14
+ * Time: 17:35
  *
  * Email: signoramiailmio@robertodormepoco.org
  * Website: http://www.robertodormepoco.org
@@ -20,18 +20,20 @@ $secret = "your secret";
 
 $doc = new \Issuu\Models\Document();
 
-$uploader = new \Issuu\Document\UrlUpload($apiKey, $secret);
+$uploader = new \Issuu\Document\Delete($apiKey, $secret);
 
-$doc->setTitle('Test title');
-$doc->setDescription('Test description');
+$doc->setTitle('Test doc');
+$doc->setDescription('Lorem ipsum');
 $doc->setName('blablabla');
 
-$uploader->setSlurpUrl('http://www.education.gov.yk.ca/pdf/pdf-test.pdf');
+$doc->setAccess(\Issuu\Enums\AbstractDocumentAccess::PRIVATE_ACCESS);
 
-$uploader->setDocument($doc);
+$uploader->addDocument($doc);
 
 try{
     $uploader->exec();
-}catch (\Issuu\Exceptions\AbstractException $e) {
+}catch (\Issuu\Exceptions\NotUniqueDocumentException $e) {
+    print_r($e->getMessage());
+}catch (\Issuu\Exceptions\DeleteException $e) {
     print_r($e->getMessage());
 }

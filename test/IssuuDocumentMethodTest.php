@@ -13,12 +13,22 @@ error_reporting(E_ALL);
 
 class IssuuDocumentMethodTest extends PHPUnit_Framework_TestCase {
 
+    protected $apiKey;
+
+    protected $secret;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->apiKey = 'apiKey';
+        $this->secret = 'ohshitthisissosecretimnotgoingtotellanyone';
+    }
+
+
     public function testSignatureWithNoParametersIsValid() {
 
-        $apiKey = 'apiKey';
-        $secret = 'ohshitthisissosecretimnotgoingtotellanyone';
 
-        $stub = $this->getMockForAbstractClass('\Issuu\Document\MethodAbstract', array($apiKey, $secret));
+        $stub = $this->getMockForAbstractClass('\Issuu\Document\MethodAbstract', array($this->apiKey, $this->secret));
 
         /**
          * {secret} => ohshitthisissosecretimnotgoingtotellanyone
@@ -35,10 +45,8 @@ class IssuuDocumentMethodTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testSignatureWithParametersIsValid() {
-        $apiKey = 'apiKey';
-        $secret = 'ohshitthisissosecretimnotgoingtotellanyone';
 
-        $uploader = new \Issuu\Document\Upload($apiKey, $secret);
+        $uploader = new \Issuu\Document\Upload($this->apiKey, $this->secret);
 
         $doc = new \Issuu\Models\Document();
         $doc->setTitle('title');
@@ -64,10 +72,8 @@ class IssuuDocumentMethodTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testUploadMethodParameters() {
-        $apiKey = 'apiKey';
-        $secret = 'ohshitthisissosecretimnotgoingtotellanyone';
 
-        $uploader = new \Issuu\Document\Upload($apiKey, $secret);
+        $uploader = new \Issuu\Document\Upload($this->apiKey, $this->secret);
 
         $doc = new \Issuu\Models\Document();
         $doc->setTitle('title');
@@ -87,12 +93,10 @@ class IssuuDocumentMethodTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testDocumentUrlUploadSignatureIsValid() {
-        $apiKey = 'apiKey';
-        $secret = 'ohshitthisissosecretimnotgoingtotellanyone';
 
         $slurpUrl = 'http://localhost:8000/test.pdf';
 
-        $urlUploader = new \Issuu\Document\UrlUpload($apiKey, $secret);
+        $urlUploader = new \Issuu\Document\UrlUpload($this->apiKey, $this->secret);
         $urlUploader->setSlurpUrl($slurpUrl);
 
         $doc = new \Issuu\Models\Document();
@@ -101,7 +105,36 @@ class IssuuDocumentMethodTest extends PHPUnit_Framework_TestCase {
 
         $urlUploader->setDocument($doc);
 
-        $this->assertEquals('604ce0d7f48b039cad0aeeafc4386490', $urlUploader->getSignature());
+        $this->assertEquals('6dac385df13abe4021e680a7947e03fb', $urlUploader->getSignature());
+    }
+
+    public function testAddedDocuments() {
+        $deleteAction = new \Issuu\Document\Delete($this->apiKey, $this->secret);
+
+        $a = new \Issuu\Models\Document();
+
+        $a->setName('a');
+
+        $b = new \Issuu\Models\Document();
+
+        $b->setName('b');
+
+        $deleteAction->addDocument($a);
+        $deleteAction->addDocument($b);
+
+        $this->assertEquals(array('a' => $a, 'b' => $b), $deleteAction->getDocuments());
+    }
+
+    public function testRemovedDocuments() {
+        $deleteAction = new \Issuu\Document\Delete($this->apiKey, $this->secret);
+
+        $a = new \Issuu\Models\Document();
+
+        $a->setName('a');
+
+        $deleteAction->removeDocument($a);
+
+        $this->assertEmpty($deleteAction->getDocuments());
     }
 }
  

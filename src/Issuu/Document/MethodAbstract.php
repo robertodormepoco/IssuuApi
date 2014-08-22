@@ -61,8 +61,6 @@ abstract class MethodAbstract implements MethodInterface {
             if($key != 'file') $signature .= $key . $value;
         }
 
-        echo $signature . PHP_EOL;
-
         return md5($signature);
     }
 
