@@ -43,7 +43,6 @@ abstract class MethodAbstract implements MethodInterface {
         $this->parameters = array("apiKey" => $apiKey);
     }
 
-
     /**
      * Return the signature of the request
      *
@@ -58,7 +57,13 @@ abstract class MethodAbstract implements MethodInterface {
         $signature = $this->secret;
 
         foreach($this->parameters as $key => $value){
-            if($key != 'file') $signature .= $key . $value;
+            if($key != 'file') {
+                if($value instanceof \DateTime) {
+                    $signature .= $key . $value->format('YYYY-MM-DD');
+                } else {
+                    $signature .= $key . $value;
+                }
+            }
         }
 
         return md5($signature);

@@ -88,11 +88,23 @@ class Upload extends MethodAbstract {
 
         $post = array_merge($this->parameters, array("signature" => $signature));
 
+        $fields = array();
+
+        foreach($post as $key => $value) {
+            if($value instanceof \DateTime) {
+                $fields[] = $key . '=' . $value->format('YYYY-MM-DD');
+            } else {
+                $fields[] = $key . '=' . $value;
+            }
+        }
+
+        $result = implode('&', $fields);
+
         curl_setopt_array($curl, array(
                 CURLOPT_URL => MethodAbstract::ENDPOINT,
                 CURLOPT_USERAGENT => 'MusicClub Issuu client',
                 CURLOPT_POST => 'true',
-                CURLOPT_POSTFIELDS => $post,
+                CURLOPT_POSTFIELDS => $result,
                 CURLOPT_BUFFERSIZE => 128,
                 CURLOPT_RETURNTRANSFER => 1,
             ));

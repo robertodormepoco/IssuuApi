@@ -76,7 +76,11 @@ class UrlUpload extends MethodAbstract {
         $fields = array();
 
         foreach($post as $key => $value) {
-            $fields[] = $key . '=' . $value;
+            if($value instanceof \DateTime) {
+                $fields[] = $key . '=' . $value->format('YYYY-MM-DD');
+            } else {
+                $fields[] = $key . '=' . $value;
+            }
         }
 
         $result = implode('&', $fields);
